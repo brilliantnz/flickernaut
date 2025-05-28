@@ -23,6 +23,7 @@ class AppJsonStruct(TypedDict):
     pinned: bool
     multiple_files: bool
     multiple_folders: bool
+    package_type: str
     enable: bool
 
 
@@ -106,6 +107,7 @@ class Application:
         pinned: bool = False,
         multiple_files: bool = False,
         multiple_folders: bool = False,
+        package_type: str = "Native",
     ) -> None:
         self.id: str = id
         self.app_id: str = app_id
@@ -113,6 +115,7 @@ class Application:
         self.pinned: bool = pinned
         self.multiple_files: bool = multiple_files
         self.multiple_folders: bool = multiple_folders
+        self.package_type: str = package_type
         self.package = Package(app_id)
         self.launcher: Optional[Launcher] = None
         if self.package.is_installed:

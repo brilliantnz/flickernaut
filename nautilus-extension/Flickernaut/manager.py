@@ -16,13 +16,12 @@ def parse_app_entry(app: dict) -> Optional[AppJsonStruct]:
         # Accept both camelCase and snake_case for compatibility
         return AppJsonStruct(
             id=app.get("id", "").strip(),
-            app_id=app.get("app_id", app.get("appId", "")).strip(),
+            app_id=app.get("appId", "").strip(),
             name=app.get("name", "").strip(),
             pinned=app.get("pinned", False),
-            multiple_files=app.get("multiple_files", app.get("multipleFiles", False)),
-            multiple_folders=app.get(
-                "multiple_folders", app.get("multipleFolders", False)
-            ),
+            multiple_files=app.get("multipleFiles", False),
+            multiple_folders=app.get("multipleFolders", False),
+            package_type=app.get("packageType", "").strip(),
             enable=app.get("enable", True),
         )
     except Exception as e:
@@ -133,6 +132,7 @@ class ApplicationConfigLoader:
                     schemaKey["pinned"],
                     schemaKey["multiple_files"],
                     schemaKey["multiple_folders"],
+                    schemaKey["package_type"],
                 )
 
                 logger.debug("")
