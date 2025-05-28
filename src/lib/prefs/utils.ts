@@ -52,9 +52,7 @@ export function checkPackage(appInfo: Gio.AppInfo): PackageCheckResult {
             const binPath = GLib.build_filenamev([binDir, binName]);
             if (GLib.file_test(binPath, GLib.FileTest.EXISTS)) {
                 installed = true;
-            }
-            else {
-                installed = false;
+                break;
             }
         }
     }
@@ -67,9 +65,6 @@ export function checkPackage(appInfo: Gio.AppInfo): PackageCheckResult {
         ) {
             installed = true;
         }
-        else {
-            installed = false;
-        }
     }
     else {
         type = 'Native';
@@ -81,7 +76,12 @@ export function checkPackage(appInfo: Gio.AppInfo): PackageCheckResult {
             installed = true;
         }
         else {
-            installed = false;
+            const binPath = GLib.find_program_in_path(executable);
+            const exists = binPath && GLib.file_test(binPath, GLib.FileTest.EXISTS);
+            const isExec = binPath && GLib.file_test(binPath, GLib.FileTest.IS_EXECUTABLE);
+            if (binPath && exists && isExec) {
+                installed = true;
+            }
         }
     }
 
