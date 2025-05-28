@@ -83,7 +83,7 @@ class ApplicationsRegistry(dict[str, Application]):
         """
         filtered: list[Application] = []
         for app in self.values():
-            if not app.package.is_installed:
+            if not app.installed:
                 continue
             if selection_count > 1:
                 # Multi-select: filter by support for multiple files/folders

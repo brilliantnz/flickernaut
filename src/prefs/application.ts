@@ -7,7 +7,7 @@ import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
 import { normalizeText } from '../lib/prefs/normalize.js';
 import { appHandler, getAppSettings } from '../lib/prefs/settings.js';
-import { generateId } from '../lib/prefs/utils.js';
+import { checkPackage, generateId } from '../lib/prefs/utils.js';
 import { ApplicationList } from './applicationList.js';
 
 const AppDialog = GObject.registerClass(
@@ -163,17 +163,11 @@ export const ApplicationPage = GObject.registerClass(
 
                 if (appInfo && !applications.some(app => app.appId === appInfo.get_id())) {
                     const mimeTypes = Array.from(appInfo.get_supported_types?.() ?? []);
+                    const packageInfo = checkPackage(appInfo);
 
-                    let packageType: 'Flatpak' | 'AppImage' | 'Native';
-                    const executable = appInfo.get_executable();
-                    if (executable.endsWith('flatpak')) {
-                        packageType = 'Flatpak';
-                    }
-                    else if (executable.endsWith('.appimage')) {
-                        packageType = 'AppImage';
-                    }
-                    else {
-                        packageType = 'Native';
+                    if (!packageInfo.installed) {
+                        dialog.destroy();
+                        return;
                     }
 
                     const app: Application = {
@@ -184,7 +178,8 @@ export const ApplicationPage = GObject.registerClass(
                         pinned: false,
                         multipleFiles: false,
                         multipleFolders: false,
-                        packageType,
+                        packageType: packageInfo.type,
+                        installed: packageInfo.installed,
                         mimeTypes,
                         enable: true,
                     };

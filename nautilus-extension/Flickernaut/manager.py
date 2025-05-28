@@ -22,6 +22,7 @@ def parse_app_entry(app: dict) -> Optional[AppJsonStruct]:
             multiple_files=app.get("multipleFiles", False),
             multiple_folders=app.get("multipleFolders", False),
             package_type=app.get("packageType", "").strip(),
+            installed=app.get("installed", False),
             enable=app.get("enable", True),
         )
     except Exception as e:
@@ -133,6 +134,7 @@ class ApplicationConfigLoader:
                     schemaKey["multiple_files"],
                     schemaKey["multiple_folders"],
                     schemaKey["package_type"],
+                    schemaKey["installed"],
                 )
 
                 logger.debug("")

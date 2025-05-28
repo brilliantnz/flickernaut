@@ -20,6 +20,7 @@ export class ApplicationListClass extends Adw.ExpanderRow {
     private declare _multiple_files: Adw.SwitchRow;
     private declare _multiple_folders: Adw.SwitchRow;
     private declare _packageType: 'Flatpak' | 'AppImage' | 'Native';
+    private declare _installed: boolean;
     private declare _mime_types: Adw.EntryRow;
     private declare _pin_button: Gtk.Button;
     private declare _toggleSwitch: ToggleSwitchClass;
@@ -50,6 +51,8 @@ export class ApplicationListClass extends Adw.ExpanderRow {
         this._multiple_folders.active = application.multipleFolders || false;
 
         this._packageType = application.packageType || 'Native';
+
+        this._installed = application.installed || false;
 
         this._mime_types.text = normalizeArrayOutput(application.mimeTypes);
 
@@ -147,6 +150,7 @@ export class ApplicationListClass extends Adw.ExpanderRow {
             multipleFiles: this._multiple_files.active,
             multipleFolders: this._multiple_folders.active,
             packageType: this._packageType,
+            installed: this._installed,
             mimeTypes: normalizeArray(this._mime_types.text),
             enable: this._toggleSwitch.active,
         };

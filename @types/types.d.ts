@@ -13,6 +13,7 @@ export interface Application {
     multipleFiles: boolean;
     multipleFolders: boolean;
     packageType: 'Flatpak' | 'AppImage' | 'Native';
+    installed: boolean;
     mimeTypes?: string[];
     enable: boolean;
 }
@@ -21,4 +22,9 @@ export interface ValidationResult {
     isValid: boolean;
     isDuplicate: boolean;
     isEmpty: boolean;
+}
+
+export interface PackageCheckResult {
+    type: 'Flatpak' | 'AppImage' | 'Native';
+    installed: boolean;
 }
