@@ -40,17 +40,14 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
 
     def _get_items(
         self,
-        file_info_or_list: list[Nautilus.FileInfo],
+        file_infos: list[Nautilus.FileInfo],
         *,
         id_prefix: str = "",
         is_file: bool = False,
         selection_count: int = 1,
     ) -> list[Nautilus.MenuItem]:
         """Generate menu items for the given file(s) or folder(s)."""
-        paths = [f.get_location().get_path() for f in file_info_or_list]
-
-        # experimental: use get_uri()
-        # paths = [f.get_uri() for f in file_info_or_list]
+        paths = [f.get_uri() for f in file_infos]
 
         return applications_registry.get_menu_items(
             paths,
@@ -63,19 +60,13 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
     def get_background_items(self, *args) -> list[Nautilus.MenuItem]:
         """Generate menu items for background (directory) clicks."""
         current_folder = args[-1]
-
         return self._get_items(
             [current_folder], id_prefix="background", is_file=False, selection_count=1
         )
 
     def get_file_items(self, *args) -> Optional[list[Nautilus.MenuItem]]:
-        """Generate menu items for file selections.
-
-        Returns:
-            Optional[list[Nautilus.MenuItem]]: List of menu items for single/multi selection, None if not handled.
-        """
+        """Generate menu items for file selections."""
         selected_files = args[-1]
-
         if not isinstance(selected_files, list) or not selected_files:
             logger.info("No selection or invalid selection type.")
             return None
@@ -84,37 +75,17 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
 
         if selection_count == 1:
             target = selected_files[0]
-            path = target.get_location().get_path()
-
-            # experimental: use get_uri()
-            # path = target.get_uri()
-
-            if target.is_directory():
-                logger.info(f"Single folder selected: {path}")
-
-                return self._get_items(
-                    [target], id_prefix="selected", is_file=False, selection_count=1
-                )
-            else:
-                logger.info(f"Single file selected: {path}")
-                return self._get_items(
-                    [target], id_prefix="selected", is_file=True, selection_count=1
-                )
+            is_dir = target.is_directory()
+            logger.info(
+                f"Single {'folder' if is_dir else 'file'} selected: {target.get_uri()}"
+            )
+            return self._get_items(
+                [target],
+                id_prefix="selected",
+                is_file=not is_dir,
+                selection_count=1,
+            )
         else:
-            # Multi-select: determine if all are files or all are directories
-            types_and_paths = [
-                (f.is_directory(), f.get_location().get_path()) for f in selected_files
-            ]
-            types, paths = zip(*types_and_paths)
-            multiple_dirs = all(types)
-            multiple_files = not any(types)
-
-            # experimental : use get_uri()
-            # types_and_paths = [(f.is_directory(), f.get_uri()) for f in selected_files]
-            # types, paths = zip(*types_and_paths)
-            # multiple_dirs = all(types)
-            # multiple_files = not any(types)
-
             MAX_MULTIPLE = 5
             if selection_count > MAX_MULTIPLE:
                 logger.debug(
@@ -122,18 +93,22 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
                 )
                 return None
 
-            if multiple_dirs:
-                logger.info(f"Multiple folders selected: {paths}")
-
+            # Multi-select: check if all are files or all are directories
+            types = [f.is_directory() for f in selected_files]
+            if all(types):
+                logger.info(
+                    f"Multiple folders selected: {[f.get_uri() for f in selected_files]}"
+                )
                 return self._get_items(
                     selected_files,
                     id_prefix="multiple",
                     is_file=False,
                     selection_count=selection_count,
                 )
-            elif multiple_files:
-                logger.info(f"Multiple files selected: {paths}")
-
+            elif not any(types):
+                logger.info(
+                    f"Multiple files selected: {[f.get_uri() for f in selected_files]}"
+                )
                 return self._get_items(
                     selected_files,
                     id_prefix="multiple",
@@ -142,6 +117,6 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
                 )
             else:
                 logger.info(
-                    f"Invalid multi-selection (mixed files and folders): {paths}"
+                    f"Invalid multi-selection (mixed files and folders): {[f.get_uri() for f in selected_files]}"
                 )
                 return None
