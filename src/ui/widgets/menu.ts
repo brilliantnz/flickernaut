@@ -32,7 +32,7 @@ export class Menu {
             )[0]);
         }
         catch (e) {
-            console.log(`Failed to load menu.ui: ${e}`);
+            console.error(`Failed to load menu.ui: ${e}`);
             return;
         }
 
