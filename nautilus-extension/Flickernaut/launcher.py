@@ -1,6 +1,6 @@
 import os
 import shlex
-from gi.repository import GLib, Gio  # type: ignore
+from gi.repository import GLib, Gio, Gdk  # type: ignore
 from .logger import get_logger
 
 logger = get_logger(__name__)
@@ -13,129 +13,92 @@ class Launcher:
         self.app_id = app_id
         self.name = name
         self._app_info = app_info
-        self._launch_method = "none"
-        self._run_command = ()
         self._commandline = self._get_commandline(app_info)
-        self._set_launch_command()
-
-        logger.debug(f"launcher method: {self._launch_method}")
-        logger.debug(f"commandline: {self._commandline}")
 
     def _get_commandline(self, app_info: Gio.DesktopAppInfo) -> list[str]:
         """Get the commandline from the app_info, handling special cases."""
         executable = os.path.basename(app_info.get_executable()) or ""
 
+        # For AppImage, skip bin_path check and use commandline as-is
+        is_appimage = executable.endswith(".appimage")
         bin_path = GLib.find_program_in_path(executable)
-        if not bin_path:
-            return []
-
         cmd = app_info.get_commandline() or ""
 
         # Split commandline into tokens while respecting quotes
         tokens = shlex.split(cmd)
 
+        # fmt: off
         # Placeholder tokens
         placeholders = {
-            "%f",
-            "%F",
-            "%u",
-            "%U",
-            "%d",
-            "%D",
-            "%n",
-            "%N",
-            "%k",
-            "%v",
-            "%m",
-            "%i",
-            "%c",
-            "%r",
-            "@@u",
-            "@@",
-            "@",
+            "%f", "%F", "%u", "%U", "%d", "%D", "%n", "%N", "%k", "%v", "%m", "%i", "%c", "%r", "@@u", "@@", "@",
         }
+        # fmt: on
+
         filtered = [
             t for t in tokens if t not in placeholders and not t.startswith("%")
         ]
 
-        if bin_path and filtered:
+        if not is_appimage and bin_path and filtered:
             filtered[0] = bin_path
+
+        logger.debug(f"commandline: {filtered}")
 
         return filtered
 
-    def _set_launch_command(self) -> None:
-        """Determine the best launch command for the application."""
-        # 1. Try Gio.AppInfo.launch_uris first
-        if self._app_info:
-            self._launch_method = "gio-launch"
-            self._run_command = ()
-            return
-
-        # 2. Fallback to gtk-launch if gio-launch is not available
-        bin_path = GLib.find_program_in_path("gtk-launch")
-        if bin_path and os.path.isfile(bin_path):
-            desktop_id = (
-                self._app_info.get_id()[:-8]
-                if self._app_info.get_id().endswith(".desktop")
-                else self._app_info.get_id()
-            )
-            self._launch_method = "gtk-launch"
-            self._run_command = (bin_path, desktop_id)
-            return
-
-        # 3. Fallback to commandline if other methods are not available
-        if self._commandline:
-            self._launch_method = "commandline"
-            self._run_command = tuple(self._commandline)
-            return
-
-        self._run_command = ()
-        self._launch_method = "none"
-        self._init_failed = True
-
     def launch(self, paths: list[str]) -> bool:
-        """Launch the application based _launch_method."""
-        if self._launch_method == "gio-launch" and self._app_info:
-            uris = [GLib.filename_to_uri(path) for path in paths]
+        """Launch the application using Gio or fallback to commandline if necessary."""
+
+        if not self._app_info:
+            logger.error(f"No app info available for {self.app_id}")
+            return False
+
+        # Launch app using Gio like how nautilus does, or fallback to commandline if necessary
+        try:
+            gfiles = [Gio.File.new_for_uri(path) for path in paths]
+            paths_is_local = [gfile.is_native() for gfile in gfiles]
+            all_local = all(paths_is_local)
+            local_paths = [gfile.get_path() for gfile in gfiles]
+
             try:
-                logger.debug(f"Launching {self.name} with gio-launch: {paths}")
-                ctx = None
-                self._app_info.launch_uris_async(uris, ctx)
-                return True
+                display = Gdk.Display.get_default()
+                launch_context = display.get_app_launch_context() if display else None
+
+                if all_local:
+                    logger.debug(
+                        f"Launching {self.name} {' '.join([p for p in local_paths if p])}"
+                    )
+                    success = self._app_info.launch(gfiles, launch_context)
+                else:
+                    logger.debug(
+                        f"Launching {self.name} {' '.join([p for p in paths if p])}"
+                    )
+                    success = self._app_info.launch_uris(paths, launch_context)
+
+                if success:
+                    return True
+
             except Exception as e:
-                logger.error(
-                    f"Failed to launch {self.name} with Gio.AppInfo.launch_uris: {e}"
-                )
-                return False
+                logger.warning(f"Gio launch failed: {e}")
+                logger.debug("Falling back to commandline...")
 
-        elif self._launch_method == "gtk-launch":
-            try:
-                command = list(self._run_command) + list(paths)
-                logger.debug(f"Launching {self.name}: {command}")
-                pid, *_ = GLib.spawn_async(command)
-                GLib.spawn_close_pid(pid)
-                return True
-            except Exception as e:
-                logger.error(f"Failed to launch {self.name} with gtk-launch: {e}")
-                return False
+            if self._commandline:
+                try:
+                    command = list(self._commandline)
+                    if all_local:
+                        command.extend(local_paths)
+                    else:
+                        command.extend(paths)
+                    logger.debug(f"Launching {self.name}: {' '.join(command)}")
+                    pid, *_ = GLib.spawn_async(command)
+                    GLib.spawn_close_pid(pid)
+                    return True
 
-        elif self._launch_method == "commandline":
-            try:
-                command = list(self._run_command) + list(paths)
-                logger.debug(f"Launching {self.name} with commandline: {command}")
-                pid, *_ = GLib.spawn_async(command)
-                GLib.spawn_close_pid(pid)
-                return True
-            except Exception as e:
-                logger.error(f"Failed to launch {self.name} with commandline: {e}")
-                return False
+                except Exception as e:
+                    logger.error(f"Commandline launch failed: {e}")
 
-        logger.error(f"No valid launch method for {self.app_id}")
-        return False
+            logger.error(f"All launch methods failed for {self.app_id}")
+            return False
 
-    @property
-    def run_command(self) -> tuple[str, ...]:
-        return self._run_command
-
-    def __str__(self) -> str:
-        return f"Launcher({self.name}, method={self._launch_method}, cmd={self._run_command})"
+        except Exception as e:
+            logger.error(f"Unexpected error during launch: {e}")
+            return False

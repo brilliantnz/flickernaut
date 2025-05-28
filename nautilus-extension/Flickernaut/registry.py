@@ -37,14 +37,8 @@ class ApplicationsRegistry(dict[str, Application]):
                 logger.error("No paths provided for launcher.")
                 return
             if launcher.launch(paths):
-                logger.debug(
-                    f"Launch succeeded for {launcher.name} with paths: {paths!r}"
-                )
+                logger.debug(f"Launch succeeded for {launcher.name}")
                 return
-            else:
-                logger.error(
-                    f"All launch methods failed for: {getattr(launcher, 'app_id', 'unknown')}"
-                )
         except Exception as e:
             logger.error(f"Error during launching application: {e}")
 
@@ -128,9 +122,6 @@ class ApplicationsRegistry(dict[str, Application]):
         # Separate pinned items and submenu items
         pinned_items: list[Nautilus.MenuItem] = []
         submenu_items: list[Nautilus.MenuItem] = []
-
-        # registry level patch: Convert all paths to uris once, up front
-        # uris = [GLib.filename_to_uri(p, None) for p in paths]
 
         for app in self._filter_applications(
             is_file=is_file, selection_count=selection_count
