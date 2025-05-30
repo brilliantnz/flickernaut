@@ -8,21 +8,139 @@ logger = get_logger(__name__)
 
 
 class ApplicationsRegistry(dict[str, Application]):
-    """Registry of configured applications."""
+    """Registry for configured applications with menu caching and filtering."""
 
     def __init__(self):
         super().__init__()
-        self._menu_cache = {}
-
-    def print_menu_cache(self):
-        """Debug: Print all menu cache keys and their sizes."""
-        logger.debug("---- Menu Cache Contents ----")
-        for k, v in self._menu_cache.items():
-            logger.debug(f"Cache key: {k} | Items: {len(v)}")
-        logger.debug("---- End of Menu Cache ----")
+        self._menu_cache: dict = {}
 
     def add_application(self, application: Application) -> None:
+        """Register a new Application."""
         self[application.id] = application
+
+    def get_menu_items(
+        self,
+        paths: list[str],
+        *,
+        id_prefix: str = "",
+        is_file: bool = False,
+        selection_count: int = 1,
+        use_submenu: bool = False,
+    ) -> list[Nautilus.MenuItem]:
+        """Generate Nautilus menu items for given paths and context."""
+        cache_key = (
+            tuple(paths),
+            id_prefix,
+            is_file,
+            selection_count,
+            use_submenu,
+        )
+
+        if cache_key in self._menu_cache:
+            return self._menu_cache[cache_key]
+
+        menu_items: list[Nautilus.MenuItem] = []
+        pinned_items: list[Nautilus.MenuItem] = []
+        submenu_items: list[Nautilus.MenuItem] = []
+
+        for app in self._filter_applications(
+            is_file=is_file, selection_count=selection_count
+        ):
+            if not app.launcher:
+                continue
+            item = self._create_menu_item(app, app.launcher, paths, id_prefix, is_file)
+            if use_submenu:
+                if app.pinned:
+                    pinned_items.append(item)
+                else:
+                    submenu_items.append(item)
+            else:
+                menu_items.append(item)
+
+        if use_submenu:
+            sub_items = self._build_submenu(
+                submenu_items, pinned_items, id_prefix, is_file
+            )
+
+            if not sub_items:
+                logger.warning(
+                    f"No menu items produced for paths: {paths!r} (is_file={is_file})"
+                )
+
+            self._menu_cache[cache_key] = sub_items
+            return sub_items
+
+        if not menu_items:
+            logger.warning(
+                f"No menu items produced for paths: {paths!r} (is_file={is_file})"
+            )
+
+        self._menu_cache[cache_key] = menu_items
+        return menu_items
+
+    def _build_submenu(
+        self,
+        submenu_items: list[Nautilus.MenuItem],
+        pinned_items: list[Nautilus.MenuItem],
+        id_prefix: str,
+        is_file: bool,
+    ) -> list[Nautilus.MenuItem]:
+        """Build submenu for Nautilus context menu."""
+        sub_items = []
+        if submenu_items:
+            submenu = Nautilus.Menu()
+            for item in submenu_items:
+                submenu.append_item(item)
+            label = _("Open In...") if not is_file else _("Open With...")
+            submenu_item = Nautilus.MenuItem.new(
+                f"Flickernaut::submenu::{id_prefix}", label
+            )
+            submenu_item.set_submenu(submenu)
+            sub_items.append(submenu_item)
+        sub_items.extend(pinned_items)
+        return sub_items
+
+    def _filter_applications(
+        self,
+        *,
+        is_file: bool,
+        selection_count: int = 1,
+    ) -> list[Application]:
+        """Filter applications by context and installation status."""
+        filtered: list[Application] = []
+        for app in self.values():
+            if not app.installed:
+                continue
+            if selection_count > 1:
+                # Multi-select: filter by support for multiple files/folders
+                if is_file and not app.multiple_files:
+                    continue
+                if not is_file and not app.multiple_folders:
+                    continue
+            # For single selection, always show if installed
+            filtered.append(app)
+        return filtered
+
+    def _create_menu_item(
+        self,
+        application: Application,
+        launcher: Launcher,
+        paths: list[str],
+        id_prefix: str,
+        is_file: bool,
+    ) -> Nautilus.MenuItem:
+        """Create a Nautilus.MenuItem for an application and launcher."""
+        label = (
+            _("Open with %s") % application.name
+            if is_file
+            else _("Open in %s") % application.name
+        )
+        item = Nautilus.MenuItem.new(
+            name=f"Flickernaut::{id_prefix}::{application.id}",
+            label=label,
+        )
+        item.connect("activate", self._activate_menu_item, launcher, paths)
+        return item
 
     @staticmethod
     def _activate_menu_item(
@@ -41,136 +159,3 @@ class ApplicationsRegistry(dict[str, Application]):
                 return
         except Exception as e:
             logger.error(f"Error during launching application: {e}")
-
-    def _create_menu_item(
-        self,
-        application: Application,
-        launcher: Launcher,
-        paths: list[str],
-        id_prefix: str,
-        is_file: bool,
-    ) -> Nautilus.MenuItem:
-        """Create a Nautilus.MenuItem for a given application and launcher."""
-        label = (
-            _("Open with %s") % application.name
-            if is_file
-            else _("Open in %s") % application.name
-        )
-
-        item = Nautilus.MenuItem.new(
-            name=f"Flickernaut::{id_prefix}::{application.id}",
-            label=label,
-        )
-
-        item.connect("activate", self._activate_menu_item, launcher, paths)
-        return item
-
-    def _filter_applications(
-        self,
-        *,
-        is_file: bool,
-        selection_count: int = 1,
-    ) -> list[Application]:
-        """Filter applications based on context and installation status.
-        - For single selection: return all installed apps.
-        - For multi-select: only apps supporting multiple files/folders.
-        """
-        filtered: list[Application] = []
-        for app in self.values():
-            if not app.installed:
-                continue
-            if selection_count > 1:
-                # Multi-select: filter by support for multiple files/folders
-                if is_file and not app.multiple_files:
-                    continue
-                if not is_file and not app.multiple_folders:
-                    continue
-            # For single selection, always show if installed
-            filtered.append(app)
-        return filtered
-
-    def get_menu_items(
-        self,
-        paths: list[str],
-        *,
-        id_prefix: str = "",
-        is_file: bool = False,
-        selection_count: int = 1,
-        use_submenu: bool = False,
-    ) -> list[Nautilus.MenuItem]:
-        """Generate Nautilus menu items for the given paths and context."""
-        # Uncomment for debugging cache
-        # self.print_menu_cache()
-
-        cache_key = (
-            tuple(paths),
-            id_prefix,
-            is_file,
-            selection_count,
-            use_submenu,
-        )
-
-        if cache_key in self._menu_cache:
-            # Uncomment for debugging cache hits
-            # logger.debug(f"[CACHE HIT] Menu cache used for key: {cache_key}")
-            return self._menu_cache[cache_key]
-        # Uncomment for debugging cache misses
-        # logger.debug(f"[CACHE MISS] Building menu for key: {cache_key}")
-
-        items: list[Nautilus.MenuItem] = []
-
-        # Separate pinned items and submenu items
-        pinned_items: list[Nautilus.MenuItem] = []
-        submenu_items: list[Nautilus.MenuItem] = []
-
-        for app in self._filter_applications(
-            is_file=is_file, selection_count=selection_count
-        ):
-            launcher = app.launcher
-            if not launcher:
-                continue
-
-            item = self._create_menu_item(app, launcher, paths, id_prefix, is_file)
-
-            if use_submenu and app.pinned:
-                pinned_items.append(item)
-            elif use_submenu:
-                submenu_items.append(item)
-            else:
-                items.append(item)
-
-        if use_submenu:
-            result_items = []
-
-            if submenu_items:
-                submenu = Nautilus.Menu()
-
-                for item in submenu_items:
-                    submenu.append_item(item)
-
-                label = _("Open In...") if not is_file else _("Open With...")
-
-                submenu_item = Nautilus.MenuItem.new(
-                    f"Flickernaut::submenu::{id_prefix}", label
-                )
-
-                submenu_item.set_submenu(submenu)
-                result_items.append(submenu_item)
-
-            result_items.extend(pinned_items)
-
-            if not result_items:
-                logger.warning(
-                    f"No menu items produced for paths: {paths!r} (is_file={is_file})"
-                )
-
-            self._menu_cache[cache_key] = result_items
-            return result_items
-
-        if not items:
-            logger.warning(
-                f"No menu items produced for paths: {paths!r} (is_file={is_file})"
-            )
-
-        self._menu_cache[cache_key] = items
-        return items

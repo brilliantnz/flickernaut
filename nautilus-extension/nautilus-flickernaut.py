@@ -38,25 +38,6 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
     def __init__(self) -> None:
         super().__init__()
 
-    def _get_items(
-        self,
-        file_infos: list[Nautilus.FileInfo],
-        *,
-        id_prefix: str = "",
-        is_file: bool = False,
-        selection_count: int = 1,
-    ) -> list[Nautilus.MenuItem]:
-        """Generate menu items for the given file(s) or folder(s)."""
-        paths = [f.get_uri() for f in file_infos]
-
-        return applications_registry.get_menu_items(
-            paths,
-            id_prefix=id_prefix,
-            is_file=is_file,
-            selection_count=selection_count,
-            use_submenu=submenu,
-        )
-
     def get_background_items(self, *args) -> list[Nautilus.MenuItem]:
         """Generate menu items for background (directory) clicks."""
         current_folder = args[-1]
@@ -120,3 +101,22 @@ class FlickernautExtension(GObject.Object, Nautilus.MenuProvider):
                     f"Invalid multi-selection (mixed files and folders): {[f.get_uri() for f in selected_files]}"
                 )
                 return None
+
+    def _get_items(
+        self,
+        file_infos: list[Nautilus.FileInfo],
+        *,
+        id_prefix: str = "",
+        is_file: bool = False,
+        selection_count: int = 1,
+    ) -> list[Nautilus.MenuItem]:
+        """Generate menu items for the given file(s) or folder(s)."""
+        paths = [f.get_uri() for f in file_infos]
+
+        return applications_registry.get_menu_items(
+            paths,
+            id_prefix=id_prefix,
+            is_file=is_file,
+            selection_count=selection_count,
+            use_submenu=submenu,
+        )
