@@ -15,36 +15,6 @@ class Launcher:
         self._app_info = app_info
         self._commandline = self._get_commandline(app_info)
 
-    def _get_commandline(self, app_info: Gio.DesktopAppInfo) -> list[str]:
-        """Get the commandline from the app_info, handling special cases."""
-        executable = os.path.basename(app_info.get_executable()) or ""
-
-        # For AppImage, skip bin_path check and use commandline as-is
-        is_appimage = executable.endswith(".appimage")
-        bin_path = GLib.find_program_in_path(executable)
-        cmd = app_info.get_commandline() or ""
-
-        # Split commandline into tokens while respecting quotes
-        tokens = shlex.split(cmd)
-
-        # fmt: off
-        # Placeholder tokens
-        placeholders = {
-            "%f", "%F", "%u", "%U", "%d", "%D", "%n", "%N", "%k", "%v", "%m", "%i", "%c", "%r", "@@u", "@@", "@",
-        }
-        # fmt: on
-
-        filtered = [
-            t for t in tokens if t not in placeholders and not t.startswith("%")
-        ]
-
-        if not is_appimage and bin_path and filtered:
-            filtered[0] = bin_path
-
-        logger.debug(f"commandline: {filtered}")
-
-        return filtered
-
     def launch(self, paths: list[str]) -> bool:
         """Launch the application using Gio or fallback to commandline if necessary."""
 
@@ -89,12 +59,13 @@ class Launcher:
                     else:
                         command.extend(paths)
                     logger.debug(f"Launching {self.name}: {' '.join(command)}")
-                    pid, *_ = GLib.spawn_async(command)
-                    GLib.spawn_close_pid(pid)
-                    return True
+                    success = self.launch_commandline(command)
+
+                    if success:
+                        return True
 
                 except Exception as e:
-                    logger.error(f"Commandline launch failed: {e}")
+                    logger.error(f"Fallback launch failed: {e}")
 
             logger.error(f"All launch methods failed for {self.app_id}")
             return False
@@ -102,3 +73,43 @@ class Launcher:
         except Exception as e:
             logger.error(f"Unexpected error during launch: {e}")
             return False
+
+    def launch_commandline(self, command: list[str]) -> bool:
+        """Launch the application using commandline."""
+        try:
+            pid, *_ = GLib.spawn_async(command)
+            GLib.spawn_close_pid(pid)
+            return True
+        except Exception as e:
+            logger.error(f"Commandline launch failed: {e}")
+            return False
+
+    def _get_commandline(self, app_info: Gio.DesktopAppInfo) -> list[str]:
+        """Get the commandline from the app_info, handling special cases."""
+        executable = os.path.basename(app_info.get_executable()) or ""
+
+        # For AppImage, skip bin_path check and use commandline as-is
+        is_appimage = executable.endswith(".appimage")
+        bin_path = GLib.find_program_in_path(executable)
+        cmd = app_info.get_commandline() or ""
+
+        # Split commandline into tokens while respecting quotes
+        tokens = shlex.split(cmd)
+
+        # fmt: off
+        # Placeholder tokens
+        placeholders = {
+            "%f", "%F", "%u", "%U", "%d", "%D", "%n", "%N", "%k", "%v", "%m", "%i", "%c", "%r", "@@u", "@@", "@",
+        }
+        # fmt: on
+
+        filtered = [
+            t for t in tokens if t not in placeholders and not t.startswith("%")
+        ]
+
+        if not is_appimage and bin_path and filtered:
+            filtered[0] = bin_path
+
+        logger.debug(f"commandline: {filtered}")
+
+        return filtered
