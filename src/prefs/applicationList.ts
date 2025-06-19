@@ -1,7 +1,7 @@
-import type Gio from 'gi://Gio';
 import type { Application } from '../../@types/types.js';
 import type { BannerHandler } from '../ui/widgets/banner.js';
 import Adw from 'gi://Adw';
+import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import Gtk from 'gi://Gtk';
@@ -56,22 +56,28 @@ export class ApplicationListClass extends Adw.ExpanderRow {
 
         this._mime_types.text = normalizeArrayOutput(application.mimeTypes);
 
+        const icon = Gio.icon_new_for_string(this._icon || 'image-missing');
+        this.add_prefix(new Gtk.Image({
+            gicon: icon,
+            pixel_size: 32,
+            css_classes: ['icon-dropshadow'],
+        }));
+
+        this._pin_button = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            css_classes: ['flat'],
+            icon_name: 'flkn-view-non-pin-symbolic',
+            visible: settings.get_boolean('submenu'),
+            tooltip_text: _('Pin in main menu when submenu is enabled.'),
+        });
+
         this._toggleSwitch = new ToggleSwitchClass({
             active: application.enable,
             valign: Gtk.Align.CENTER,
         });
 
-        this.add_suffix(this._toggleSwitch);
-
-        this._pin_button = new Gtk.Button({
-            valign: Gtk.Align.CENTER,
-            css_classes: ['flat'],
-            icon_name: 'view-non-pin-symbolic',
-            visible: settings.get_boolean('submenu'),
-            tooltip_text: _('Pin in main menu when submenu is enabled.'),
-        });
-
         this.add_suffix(this._pin_button);
+        this.add_suffix(this._toggleSwitch);
 
         this._name.connect('changed', () => {
             if (settings && typeof application.id === 'string') {
@@ -127,10 +133,10 @@ export class ApplicationListClass extends Adw.ExpanderRow {
             this._pinned = !this._pinned;
 
             if (this._pinned) {
-                this._pin_button.icon_name = 'view-pin-symbolic';
+                this._pin_button.icon_name = 'flkn-view-pin-symbolic';
             }
             else {
-                this._pin_button.icon_name = 'view-non-pin-symbolic';
+                this._pin_button.icon_name = 'flkn-view-non-pin-symbolic';
             }
             this._updateAppSetting();
         });
