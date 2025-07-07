@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: flickernaut@imoize.github.io\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-26 16:17+0700\n"
-"PO-Revision-Date: 2025-07-07 08:30+0000\n"
+"PO-Revision-Date: 2025-07-08 09:02+0000\n"
 "Last-Translator: freeducks-debug <209897795+freeducks-"
 "debug@users.noreply.github.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/flickernaut/"
@@ -48,7 +48,7 @@ msgstr "Поведінка"
 
 #: src/ui/pages/general.ui:21
 msgid "Group In Submenu"
-msgstr "Групувати у підменю"
+msgstr "Групувати у окреме підменю"
 
 #: src/ui/pages/general.ui:22
 msgid "Whether to group entries in a submenu."
@@ -103,7 +103,7 @@ msgstr "Відкрити в..."
 
 #: nautilus-extension/Flickernaut/registry.py:160
 msgid "Open With..."
-msgstr "Відкрити в..."
+msgstr "Відкрити через..."
 
 #: src/prefs/applicationList.ts:65
 msgid "Pin in main menu when submenu is enabled."
