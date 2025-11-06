@@ -15,7 +15,7 @@ node_modules: package.json
 	npm install
 
 build: node_modules
-	tsc
+	npx tsc
 	@$(MAKE) build-ui
 
 build-ui: $(UI_FILES)
