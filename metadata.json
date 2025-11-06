@@ -10,7 +10,8 @@
         "kofi": "brilliantnz"
     },
     "shell-version": [
-        "48"
+        "48",
+        "49"
     ],
-    "version": 8
+    "version": 9
 }
