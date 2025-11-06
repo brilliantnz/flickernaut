@@ -22,3 +22,19 @@ export interface ValidationResult {
     isDuplicate: boolean;
     isEmpty: boolean;
 }
+
+/**
+ * The raw extension metadata from metadata.json.
+ * This type matches the MetadataJson interface from GNOME Shell 49+
+ * @see https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/extensions/sharedInternals.js
+ */
+export interface MetadataJson extends Record<string, any> {
+    readonly 'uuid': string;
+    readonly 'name': string;
+    readonly 'description': string;
+    readonly 'shell-version': readonly string[];
+    readonly 'version'?: string;
+    readonly 'url'?: string;
+    readonly 'settings-schema'?: string;
+    readonly 'gettext-domain'?: string;
+}

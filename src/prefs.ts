@@ -1,5 +1,5 @@
 import type Adw from 'gi://Adw';
-import type { ExtensionMetadata } from 'resource:///org/gnome/shell/extensions/extension.js';
+import type { MetadataJson } from '../@types/types.js';
 import Gdk from 'gi://Gdk';
 import Gtk from 'gi://Gtk';
 import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
@@ -10,7 +10,7 @@ import { BannerHandler } from './ui/widgets/banner.js';
 import { Menu } from './ui/widgets/menu.js';
 
 export default class FlickernautPrefs extends ExtensionPreferences {
-    constructor(metadata: ExtensionMetadata) {
+    constructor(metadata: MetadataJson) {
         super(metadata);
         const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default() as Gdk.Display);
         const UIFolderPath = `${this.path}/ui`;

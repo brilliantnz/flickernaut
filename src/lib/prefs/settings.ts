@@ -68,7 +68,7 @@ function migrateSettings(settings: Gio.Settings) {
     const lastVersion = 2;
     const currentVersion = settings
         .get_user_value(SchemaKey.settingsVersion)
-        ?.recursiveUnpack();
+        ?.recursiveUnpack() as number | undefined;
 
     if (!currentVersion || currentVersion < lastVersion) {
         if (settings.list_keys().includes('editors')) {
@@ -88,7 +88,7 @@ function migrateSettings(settings: Gio.Settings) {
  */
 export function getSettings<K extends keyof typeof SchemaKey>(key: K): SchemaType[K] {
     const schemaKey = SchemaKey[key];
-    return settings.get_value(schemaKey).recursiveUnpack();
+    return settings.get_value(schemaKey).recursiveUnpack() as SchemaType[K];
 }
 
 /**
@@ -107,7 +107,7 @@ export function setSettings<K extends keyof typeof SchemaKey>(key: K, value: Sch
     const schemaKey = SchemaKey[key];
     const variantType = SchemaVariant[schemaKey];
 
-    const variant = new GLib.Variant(variantType, value);
+    const variant = new GLib.Variant(variantType, value as any);
     settings.set_value(schemaKey, variant);
 
     if (bannerHandler)
