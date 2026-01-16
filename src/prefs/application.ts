@@ -22,7 +22,7 @@ const AppDialog = GObject.registerClass(
             });
 
             this.get_widget().set({
-                show_all: true,
+                show_all: false,
                 show_other: true,
             });
 

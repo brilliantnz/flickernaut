@@ -31,7 +31,13 @@ class Package:
 
     def __init__(self, app_id: str):
         self.app_id = app_id
-        self.app_info = Gio.DesktopAppInfo.new(app_id) if app_id else None
+        try:
+            self.app_info = Gio.DesktopAppInfo.new(app_id) if app_id else None
+            if app_id and not self.app_info:
+                logger.warning(f"Desktop file not found: {app_id}")
+        except Exception as e:
+            logger.error(f"Error loading desktop file '{app_id}': {e}")
+            self.app_info = None
         self._is_installed_cache = None
 
     @property
