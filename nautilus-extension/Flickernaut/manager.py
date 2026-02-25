@@ -126,18 +126,24 @@ class ApplicationConfigLoader:
                 for k, v in schemaKey.items():
                     logger.debug(f"{k}: {v!r}")
 
-                application = Application(
-                    schemaKey["id"],
-                    schemaKey["app_id"],
-                    schemaKey["name"],
-                    schemaKey["pinned"],
-                    schemaKey["multiple_files"],
-                    schemaKey["multiple_folders"],
-                )
+                try:
+                    application = Application(
+                        schemaKey["id"],
+                        schemaKey["app_id"],
+                        schemaKey["name"],
+                        schemaKey["pinned"],
+                        schemaKey["multiple_files"],
+                        schemaKey["multiple_folders"],
+                    )
 
-                logger.debug("")
+                    logger.debug("")
 
-                registry.add_application(application)
+                    registry.add_application(application)
+                except Exception as e:
+                    logger.warning(
+                        f"Skipping invalid application '{schemaKey.get('name', 'unknown')}': {e}"
+                    )
+                    continue
 
             return registry
 
