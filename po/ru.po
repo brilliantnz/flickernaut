@@ -8,144 +8,125 @@ msgstr ""
 "Project-Id-Version: flickernaut@imoize.github.io\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-26 16:17+0700\n"
-"PO-Revision-Date: 2025-05-15 10:35+0000\n"
-"Last-Translator: Matheus <cybercountry@proton.me>\n"
-"Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
-"flickernaut/flickernaut/pt_BR/>\n"
-"Language: pt_BR\n"
+"PO-Revision-Date: 2025-07-08 09:02+0000\n"
+"Last-Translator: freeducks-debug <209897795+freeducks-"
+"debug@users.noreply.github.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/flickernaut/"
+"flickernaut/ru/>\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.13-dev\n"
 
 #: src/ui/pages/application.ui:12 src/ui/pages/application.ui:18
 msgid "Apps"
-msgstr ""
+msgstr "Приложения"
 
 #: src/ui/pages/application.ui:19
 msgid ""
 "Applications listed here will appear in the Nautilus context menu.\n"
 "You can Enable/Disable using the toggle switch."
 msgstr ""
+"Приложения в этом списке появятся в контекстном меню \"Файлов\" (Nautilus).\n"
+"Ви можете включить/выключить через переключатель."
 
 #: src/ui/pages/application.ui:28
 msgid "Add"
-msgstr ""
+msgstr "Добавить"
 
 #: src/ui/pages/general.ui:12
 msgid "General"
-msgstr "Geral"
+msgstr "Общие"
 
 #: src/ui/pages/general.ui:18
 msgid "Behavior"
-msgstr ""
+msgstr "Поведение"
 
 #: src/ui/pages/general.ui:21
 msgid "Group In Submenu"
-msgstr ""
+msgstr "Группировать в подменю"
 
 #: src/ui/pages/general.ui:22
 msgid "Whether to group entries in a submenu."
-msgstr ""
+msgstr "Нужно ли группировать записи в отдельное подменю."
 
 #: src/ui/widgets/application-list.ui:12
 msgid "Name"
-msgstr "Nome"
+msgstr "Название"
 
 #: src/ui/widgets/application-list.ui:17
 msgid "Multiple Files"
-msgstr ""
+msgstr "Несколько файлов"
 
 #: src/ui/widgets/application-list.ui:18
 msgid "Enable if the app supports opening several files."
 msgstr ""
+"Включите эту опцию, если приложение поддерживает открытие нескольких файлов."
 
 #: src/ui/widgets/application-list.ui:23
 msgid "Multiple Folders"
-msgstr ""
+msgstr "Несколько папок"
 
 #: src/ui/widgets/application-list.ui:24
 msgid "Enable if the app supports opening several folders."
 msgstr ""
+"Включите эту опцию, если приложение поддерживает открытие нескольких папок."
 
 #: src/ui/widgets/application-list.ui:29
 msgid "Mime Types"
-msgstr ""
+msgstr "Типы Mime"
 
 #: src/ui/widgets/application-list.ui:42
 msgid "Remove"
-msgstr ""
+msgstr "Удалить"
 
 #: src/ui/widgets/menu.ui:12
 msgid "Project Page"
-msgstr ""
+msgstr "Страница проекта"
 
 #: nautilus-extension/Flickernaut/registry.py:61
 #, python-format
 msgid "Open with %s"
-msgstr "Abrir com %s"
+msgstr "Открыть через %s"
 
 #: nautilus-extension/Flickernaut/registry.py:63
 #, python-format
 msgid "Open in %s"
-msgstr "Abrir em %s"
+msgstr "Открыть в %s"
 
 #: nautilus-extension/Flickernaut/registry.py:160
 msgid "Open In..."
-msgstr ""
+msgstr "Открыть в..."
 
 #: nautilus-extension/Flickernaut/registry.py:160
 msgid "Open With..."
-msgstr ""
+msgstr "Открыть через..."
 
 #: src/prefs/applicationList.ts:65
 msgid "Pin in main menu when submenu is enabled."
 msgstr ""
+"Закрепить в главном меню, если включено \"Группировать в отдельное подменю\"."
 
 #: src/prefs/applicationList.ts:80
 msgid "Name cannot be empty"
-msgstr "Nome não pode estar em branco"
+msgstr "Название не может быть пустым"
 
 #: src/prefs/applicationList.ts:82
 msgid "Name already exists"
-msgstr "Esse nome já existe"
+msgstr "Название уже существует"
 
 #: src/ui/widgets/banner.ts:26
 msgid "Restart Nautilus to apply changes."
-msgstr ""
+msgstr "Перезагрузить \"Файлы\" (Nautilus), чтобы изменения вступили в силу."
 
 #: src/ui/widgets/banner.ts:27
 msgid "Restart"
-msgstr ""
+msgstr "Перезагрузить"
 
 #: src/ui/widgets/banner.ts:28
 msgid "Nautilus will be closed and restarted after clicking this button."
 msgstr ""
-
-#~ msgid "Native Cmd"
-#~ msgstr "Comando nativo"
-
-#~ msgid "Flatpak ID"
-#~ msgstr "Flatpak ID"
-
-#~ msgid "Arguments"
-#~ msgstr "Argumentos"
-
-#~ msgid "Unknown"
-#~ msgstr "Desconhecido"
-
-#~ msgid "Native command already exists"
-#~ msgstr "Esse comando nativo já está em uso"
-
-#~ msgid "Flatpak ID already exists"
-#~ msgstr "Esse Flatpak ID já está em uso"
-
-#~ msgid "Needs to Restart Nautilus"
-#~ msgstr "É preciso reiniciar o Nautilus"
-
-#~ msgid "Editor"
-#~ msgstr "Editor"
-
-#~ msgid "Support File"
-#~ msgstr "Suporte a arquivos"
+"\"Файлы\" (Nautilus) будут закрыты и перезагружены после нажатия этой кнопки."
