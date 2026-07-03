@@ -1,11 +1,11 @@
 # GNOME Shell Extension - Flickernaut
 
 [<img src="assets/get_it_on_gnome_extensions.png" height="65" align="center">](https://extensions.gnome.org/extension/8101/flickernaut/)
-![GitHub](https://img.shields.io/github/license/imoize/flickernaut)
+![GitHub](https://img.shields.io/github/license/brilliantnz/flickernaut)
 [![Weblate project translated](https://hosted.weblate.org/widgets/flickernaut/-/flickernaut/svg-badge.svg)](https://hosted.weblate.org/engage/flickernaut/)
-![GitHub issues](https://img.shields.io/github/issues/imoize/flickernaut)
-![GitHub last commit](https://img.shields.io/github/last-commit/imoize/flickernaut)
-![GitHub stars](https://img.shields.io/github/stars/imoize/flickernaut)
+![GitHub issues](https://img.shields.io/github/issues/brilliantnz/flickernaut)
+![GitHub last commit](https://img.shields.io/github/last-commit/brilliantnz/flickernaut)
+![GitHub stars](https://img.shields.io/github/stars/brilliantnz/flickernaut)
 
 A GNOME extension that adds custom entry to Nautilus context menu for your installed dev tools, IDEs, and custom apps.
 
@@ -58,7 +58,7 @@ This extension is developed using **TypeScript** and **Python** for Nautilus par
 Install the extension from source:
 
 ```bash
-git clone https://github.com/imoize/flickernaut
+git clone https://github.com/brilliantnz/flickernaut
 cd flickernaut
 make install
 ```

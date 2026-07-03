@@ -8,7 +8,7 @@ from Flickernaut.manager import applications_registry, submenu
 logger = get_logger(__name__)
 
 # Init gettext translations
-UUID: str = "flickernaut@imoize.github.io"
+UUID: str = "flickernaut@brilliantnz.github.io"
 
 LOCALE_DIR = os.path.join(
     GLib.get_user_data_dir(),

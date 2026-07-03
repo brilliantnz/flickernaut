@@ -1,12 +1,12 @@
 {
     "name": "Flickernaut",
     "description": "A GNOME extension that adds custom entry to Nautilus context menu.\n\nNOTE:\n- To use this extension, you need to install nautilus-python package.\n- Please restart Nautilus after enabling, disabling, or changing extension preferences to apply changes.",
-    "uuid": "flickernaut@imoize.github.io",
-    "url": "https://github.com/imoize/flickernaut",
+    "uuid": "flickernaut@brilliantnz.github.io",
+    "url": "https://github.com/brilliantnz/flickernaut",
     "settings-schema": "org.gnome.shell.extensions.flickernaut",
-    "gettext-domain": "flickernaut@imoize.github.io",
+    "gettext-domain": "flickernaut@brilliantnz.github.io",
     "donations": {
-        "github": "imoize",
+        "github": "brilliantnz",
         "kofi": "brilliantnz"
     },
     "shell-version": [

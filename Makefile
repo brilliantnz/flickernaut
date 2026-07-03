@@ -1,5 +1,5 @@
 NAME = flickernaut
-UUID = $(NAME)@imoize.github.io
+UUID = $(NAME)@brilliantnz.github.io
 
 BLP_FILES := $(shell find resources/ui -name '*.blp')
 UI_FILES := $(patsubst resources/ui/%.blp,src/ui/%.ui,$(BLP_FILES))

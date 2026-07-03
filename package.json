@@ -6,13 +6,13 @@
     "description": "An extension that adds quick-launch to Nautilus context menu entries",
     "author": "Brilliant Nurzaman",
     "license": "GPL-3.0-or-later",
-    "homepage": "https://github.com/imoize/flickernaut#readme",
+    "homepage": "https://github.com/brilliantnz/flickernaut#readme",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/imoize/flickernaut.git"
+        "url": "git+https://github.com/brilliantnz/flickernaut.git"
     },
     "bugs": {
-        "url": "https://github.com/imoize/flickernaut/issues"
+        "url": "https://github.com/brilliantnz/flickernaut/issues"
     },
     "sideEffects": false,
     "scripts": {

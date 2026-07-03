@@ -54,7 +54,7 @@ export class Menu {
         const actions = [
             {
                 name: 'open-github',
-                link: 'https://github.com/imoize/flickernaut',
+                link: 'https://github.com/brilliantnz/flickernaut',
             },
             {
                 name: 'donate-kofi',
