@@ -1,41 +1,42 @@
-import type Adw from 'gi://Adw';
-import type { MetadataJson } from '../@types/types.js';
-import Gdk from 'gi://Gdk';
-import Gtk from 'gi://Gtk';
-import { ExtensionPreferences } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
-import { initSettings, SchemaKey, uninitSettings } from './lib/prefs/settings.js';
-import { ApplicationPage } from './prefs/application.js';
-import { GeneralPage } from './prefs/general.js';
-import { BannerHandler } from './ui/widgets/banner.js';
-import { Menu } from './ui/widgets/menu.js';
+import type Adw from "gi://Adw";
+import Gdk from "gi://Gdk";
+import Gtk from "gi://Gtk";
+import { ExtensionPreferences } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
+
+import { initSettings, SchemaKey, uninitSettings } from "./lib/prefs/settings.js";
+import { ApplicationPage } from "./prefs/application.js";
+import { GeneralPage } from "./prefs/general.js";
+import type { MetadataJson } from "./types.js";
+import { BannerHandler } from "./ui/widgets/banner.js";
+import { Menu } from "./ui/widgets/menu.js";
 
 export default class FlickernautPrefs extends ExtensionPreferences {
-    constructor(metadata: MetadataJson) {
-        super(metadata);
-        const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default() as Gdk.Display);
-        const UIFolderPath = `${this.path}/ui`;
-        iconTheme.add_search_path(`${UIFolderPath}/icons`);
-    }
+  constructor(metadata: MetadataJson) {
+    super(metadata);
+    const iconTheme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default() as Gdk.Display);
+    const UIFolderPath = `${this.path}/ui`;
+    iconTheme.add_search_path(`${UIFolderPath}/icons`);
+  }
 
-    async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
-        const menu = new Menu();
-        menu.add(window);
+  async fillPreferencesWindow(window: Adw.PreferencesWindow): Promise<void> {
+    const menu = new Menu();
+    menu.add(window);
 
-        initSettings(this.getSettings());
+    initSettings(this.getSettings());
 
-        const settings = this.getSettings();
-        const schemaKey = SchemaKey;
-        const bannerHandler = new BannerHandler();
+    const settings = this.getSettings();
+    const schemaKey = SchemaKey;
+    const bannerHandler = new BannerHandler();
 
-        window.add(new GeneralPage(schemaKey, bannerHandler));
-        window.add(new ApplicationPage(settings, bannerHandler));
+    window.add(new GeneralPage(schemaKey, bannerHandler));
+    window.add(new ApplicationPage(settings, bannerHandler));
 
-        // Clean up resources when the window is closed
-        window.connect('close-request', () => {
-            uninitSettings();
-            bannerHandler.cleanup();
-        });
+    // Clean up resources when the window is closed
+    window.connect("close-request", () => {
+      uninitSettings();
+      bannerHandler.cleanup();
+    });
 
-        return Promise.resolve();
-    }
+    return Promise.resolve();
+  }
 }

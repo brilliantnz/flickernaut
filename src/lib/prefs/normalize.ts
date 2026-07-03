@@ -5,7 +5,7 @@
  * @returns The trimmed string.
  */
 export function normalizeText(input: string): string {
-    return input.trim();
+  return input.trim();
 }
 
 /**
@@ -16,7 +16,7 @@ export function normalizeText(input: string): string {
  * @returns An array of words from the normalized string.
  */
 export function normalizeArray(input: string): string[] {
-    return input.trim().replace(/\s+/g, ' ').split(' ');
+  return input.trim().replace(/\s+/g, " ").split(" ");
 }
 
 /**
@@ -27,5 +27,5 @@ export function normalizeArray(input: string): string[] {
  * @returns A normalized string created by joining the array elements.
  */
 export function normalizeArrayOutput(input: string[] = []): string {
-    return input.join(' ').trim().replace(/\s+/g, ' ');
+  return input.join(" ").trim().replace(/\s+/g, " ");
 }

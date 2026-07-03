@@ -1,7 +1,7 @@
-import type { ValidationResult } from '../../../@types/types.js';
-import { getAppSettings } from './settings.js';
+import type { ValidationResult } from "../../types.js";
+import { getAppSettings } from "./settings.js";
 
-type ValidateField = 'name';
+type ValidateField = "name";
 
 /**
  * Validates a given value against a specific field and checks for duplicates.
@@ -14,26 +14,22 @@ type ValidateField = 'name';
  * - `isDuplicate`: Whether the value is a duplicate.
  * - `isEmpty`: Whether the value is empty.
  */
-export function validate(
-    val: string,
-    id: string,
-    field: ValidateField,
-): ValidationResult {
-    const value = val.trim();
-    if (!value) {
-        return { isValid: false, isDuplicate: false, isEmpty: true };
-    }
+export function validate(val: string, id: string, field: ValidateField): ValidationResult {
+  const value = val.trim();
+  if (!value) {
+    return { isValid: false, isDuplicate: false, isEmpty: true };
+  }
 
-    const applications = getAppSettings().filter(app => app.id !== id);
+  const applications = getAppSettings().filter((app) => app.id !== id);
 
-    let isDuplicate = false;
-    if (field === 'name') {
-        isDuplicate = applications.some(app => app.name === value);
-    }
+  let isDuplicate = false;
+  if (field === "name") {
+    isDuplicate = applications.some((app) => app.name === value);
+  }
 
-    return {
-        isValid: !isDuplicate,
-        isDuplicate,
-        isEmpty: false,
-    };
+  return {
+    isValid: !isDuplicate,
+    isDuplicate,
+    isEmpty: false,
+  };
 }

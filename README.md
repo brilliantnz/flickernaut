@@ -23,19 +23,22 @@ A GNOME extension that adds custom entry to Nautilus context menu for your insta
 
 ## Requirements
 
- To use this extension, you need to install the `nautilus-python` package. This package acts as an extension and providing Python bindings for Nautilus. Below are the installation instructions for various Linux distributions:
+To use this extension, you need to install the `nautilus-python` package. This package acts as an extension and providing Python bindings for Nautilus. Below are the installation instructions for various Linux distributions:
 
 ### Fedora
+
 ```bash
 sudo dnf install nautilus-python nautilus-extensions
 ```
 
 ### Ubuntu and Debian-based Distributions
+
 ```bash
 sudo apt install python3-nautilus gir1.2-nautilus-3.0
 ```
 
 ### Arch Linux
+
 ```bash
 sudo pacman -Sy python-nautilus
 ```

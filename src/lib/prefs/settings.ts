@@ -1,15 +1,16 @@
-import type Gio from 'gi://Gio';
-import type { Application, SchemaType } from '../../../@types/types.js';
-import type { BannerHandler } from '../../ui/widgets/banner.js';
-import GLib from 'gi://GLib';
+import type Gio from "gi://Gio";
+import GLib from "gi://GLib";
+
+import type { Application, SchemaType } from "../../types.js";
+import type { BannerHandler } from "../../ui/widgets/banner.js";
 
 /**
  * All existing schema keys.
  */
 export const SchemaKey = {
-    applications: 'applications',
-    settingsVersion: 'settings-version',
-    submenu: 'submenu',
+  applications: "applications",
+  settingsVersion: "settings-version",
+  submenu: "submenu",
 } as const;
 
 /**
@@ -24,9 +25,9 @@ export const SchemaKey = {
  * This record ensures type safety by restricting keys to those defined in `SchemaKey`.
  */
 const SchemaVariant: Record<(typeof SchemaKey)[keyof typeof SchemaKey], string> = {
-    'applications': 'as',
-    'settings-version': 'u',
-    'submenu': 'b',
+  applications: "as",
+  "settings-version": "u",
+  submenu: "b",
 } as const;
 
 /**
@@ -40,8 +41,8 @@ let settings: Gio.Settings;
  * @param gSettings - A `Gio.Settings` to initialize the settings with.
  */
 export function initSettings(gSettings: Gio.Settings): void {
-    migrateSettings(gSettings);
-    settings = gSettings;
+  migrateSettings(gSettings);
+  settings = gSettings;
 }
 
 /**
@@ -51,7 +52,7 @@ export function initSettings(gSettings: Gio.Settings): void {
  * when the settings are no longer needed, such as during extension disable or cleanup.
  */
 export function uninitSettings() {
-    (settings as Gio.Settings | null) = null;
+  (settings as Gio.Settings | null) = null;
 }
 
 /**
@@ -65,17 +66,17 @@ export function uninitSettings() {
  * @param settings - The `Gio.Settings` instance containing the application's settings.
  */
 function migrateSettings(settings: Gio.Settings) {
-    const lastVersion = 2;
-    const currentVersion = settings
-        .get_user_value(SchemaKey.settingsVersion)
-        ?.recursiveUnpack() as number | undefined;
+  const lastVersion = 2;
+  const currentVersion = settings.get_user_value(SchemaKey.settingsVersion)?.recursiveUnpack() as
+    | number
+    | undefined;
 
-    if (!currentVersion || currentVersion < lastVersion) {
-        if (settings.list_keys().includes('editors')) {
-            settings.reset('editors');
-        }
-        settings.set_uint(SchemaKey.settingsVersion, lastVersion);
+  if (!currentVersion || currentVersion < lastVersion) {
+    if (settings.list_keys().includes("editors")) {
+      settings.reset("editors");
     }
+    settings.set_uint(SchemaKey.settingsVersion, lastVersion);
+  }
 }
 
 /**
@@ -87,8 +88,8 @@ function migrateSettings(settings: Gio.Settings) {
  *          with the type inferred from the `SchemaType` mapping.
  */
 export function getSettings<K extends keyof typeof SchemaKey>(key: K): SchemaType[K] {
-    const schemaKey = SchemaKey[key];
-    return settings.get_value(schemaKey).recursiveUnpack() as SchemaType[K];
+  const schemaKey = SchemaKey[key];
+  return settings.get_value(schemaKey).recursiveUnpack() as SchemaType[K];
 }
 
 /**
@@ -103,15 +104,18 @@ export function getSettings<K extends keyof typeof SchemaKey>(key: K): SchemaTyp
  * creates a new `GLib.Variant` with the specified value, and updates the setting.
  * If a `bannerHandler` is provided, it will trigger the display of all banners.
  */
-export function setSettings<K extends keyof typeof SchemaKey>(key: K, value: SchemaType[K], bannerHandler?: BannerHandler) {
-    const schemaKey = SchemaKey[key];
-    const variantType = SchemaVariant[schemaKey];
+export function setSettings<K extends keyof typeof SchemaKey>(
+  key: K,
+  value: SchemaType[K],
+  bannerHandler?: BannerHandler,
+) {
+  const schemaKey = SchemaKey[key];
+  const variantType = SchemaVariant[schemaKey];
 
-    const variant = new GLib.Variant(variantType, value as any);
-    settings.set_value(schemaKey, variant);
+  const variant = new GLib.Variant(variantType, value as any);
+  settings.set_value(schemaKey, variant);
 
-    if (bannerHandler)
-        bannerHandler.showAll();
+  if (bannerHandler) bannerHandler.showAll();
 }
 
 /**
@@ -123,17 +127,16 @@ export function setSettings<K extends keyof typeof SchemaKey>(key: K, value: Sch
  * @returns {Application[]} An array of valid `Application` objects.
  */
 export function getAppSettings(): Application[] {
-    return getSettings('applications')
-        .map((json) => {
-            try {
-                return JSON.parse(json) as Application;
-            }
-            catch (e) {
-                console.error(`Failed to parse application entry:`, json, e);
-                return null;
-            }
-        })
-        .filter((app): app is Application => app !== null);
+  return getSettings("applications")
+    .map((json) => {
+      try {
+        return JSON.parse(json) as Application;
+      } catch (e) {
+        console.error(`Failed to parse application entry:`, json, e);
+        return null;
+      }
+    })
+    .filter((app): app is Application => app !== null);
 }
 
 /**
@@ -145,15 +148,19 @@ export function getAppSettings(): Application[] {
  * @param bannerHandler - Optional handler for displaying banners or notifications.
  */
 export function setAppSettings(newAppSettings: Application, bannerHandler?: BannerHandler): void {
-    const appSettings = getAppSettings();
-    const idx = appSettings.findIndex(app => app.id === newAppSettings.id);
-    if (idx === -1) {
-        return;
-    }
-    const newSettings = appSettings.map(app =>
-        app.id === newAppSettings.id ? newAppSettings : app,
-    );
-    setSettings('applications', newSettings.map(app => JSON.stringify(app)), bannerHandler);
+  const appSettings = getAppSettings();
+  const idx = appSettings.findIndex((app) => app.id === newAppSettings.id);
+  if (idx === -1) {
+    return;
+  }
+  const newSettings = appSettings.map((app) =>
+    app.id === newAppSettings.id ? newAppSettings : app,
+  );
+  setSettings(
+    "applications",
+    newSettings.map((app) => JSON.stringify(app)),
+    bannerHandler,
+  );
 }
 
 /**
@@ -169,28 +176,28 @@ export function setAppSettings(newAppSettings: Application, bannerHandler?: Bann
  * - Updates the settings by serializing the application list and invoking `setSettings`.
  */
 export function appHandler(
-    action: 'add' | 'remove',
-    app: Application | string,
-    bannerHandler?: BannerHandler,
+  action: "add" | "remove",
+  app: Application | string,
+  bannerHandler?: BannerHandler,
 ): void {
-    const appSettings = getAppSettings();
+  const appSettings = getAppSettings();
 
-    let newAppList: Application[];
+  let newAppList: Application[];
 
-    if (action === 'add' && typeof app === 'object') {
-        if (appSettings.some(a => a.id === app.id || a.appId === app.appId)) {
-            return;
-        }
-        newAppList = [...appSettings, app];
+  if (action === "add" && typeof app === "object") {
+    if (appSettings.some((a) => a.id === app.id || a.appId === app.appId)) {
+      return;
     }
+    newAppList = [...appSettings, app];
+  } else if (action === "remove" && typeof app === "string") {
+    newAppList = appSettings.filter((a) => a.id !== app);
+  } else {
+    return;
+  }
 
-    else if (action === 'remove' && typeof app === 'string') {
-        newAppList = appSettings.filter(a => a.id !== app);
-    }
-
-    else {
-        return;
-    }
-
-    setSettings('applications', newAppList.map(a => JSON.stringify(a)), bannerHandler);
+  setSettings(
+    "applications",
+    newAppList.map((a) => JSON.stringify(a)),
+    bannerHandler,
+  );
 }
