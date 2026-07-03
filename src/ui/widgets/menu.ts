@@ -15,7 +15,7 @@ export class Menu {
    *
    * @param window - The Adw.PreferencesWindow to which the menu will be added.
    *
-   * @remarks
+   *
    * - The method expects a `menu.ui` file to be present and accessible relative to the module URL.
    * - If the menu UI or header bar cannot be found, the method will return early.
    * - The actions added will open external URLs in the user's default browser.
@@ -29,7 +29,7 @@ export class Menu {
         )[0],
       );
     } catch (e) {
-      console.log(`Failed to load menu.ui: ${e}`);
+      console.log(`Failed to load menu.ui: ${String(e)}`);
       return;
     }
 
