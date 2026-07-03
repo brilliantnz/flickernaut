@@ -1,5 +1,6 @@
 import Adw from "gi://Adw";
 import Gio from "gi://Gio";
+import GioUnix from "gi://GioUnix";
 import GLib from "gi://GLib";
 import GObject from "gi://GObject";
 import Gtk from "gi://Gtk";
@@ -92,7 +93,7 @@ export const ApplicationPage = GObject.registerClass(
 
       applications.forEach((app) => {
         if (!app.appId) return;
-        const appInfo = Gio.DesktopAppInfo.new(app.appId);
+        const appInfo = GioUnix.DesktopAppInfo.new(app.appId);
         if (appInfo) {
           this._applicationsList.push(app);
         }
