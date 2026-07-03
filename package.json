@@ -1,35 +1,36 @@
 {
-    "name": "flickernaut",
-    "type": "module",
-    "version": "1.0.0",
-    "private": true,
-    "description": "An extension that adds quick-launch to Nautilus context menu entries",
-    "author": "Brilliant Nurzaman",
-    "license": "GPL-3.0-or-later",
-    "homepage": "https://github.com/brilliantnz/flickernaut#readme",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/brilliantnz/flickernaut.git"
-    },
-    "bugs": {
-        "url": "https://github.com/brilliantnz/flickernaut/issues"
-    },
-    "sideEffects": false,
-    "scripts": {
-        "build": "make all",
-        "lint": "eslint .",
-        "lint:fix": "eslint --fix .",
-        "typecheck": "tsc --strict --noEmit"
-    },
-    "dependencies": {
-        "@girs/gjs": "4.0.0-beta.38",
-        "@girs/gnome-shell": "^49.1.0"
-    },
-    "devDependencies": {
-        "@antfu/eslint-config": "^6.2.0",
-        "eslint": "^9.39.1",
-        "eslint-plugin-format": "^1.0.2",
-        "eslint-plugin-jsdoc": "^61.1.12",
-        "typescript": "^5.9.3"
-    }
+  "name": "flickernaut",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An extension that adds quick-launch to Nautilus context menu entries",
+  "homepage": "https://github.com/brilliantnz/flickernaut#readme",
+  "bugs": {
+    "url": "https://github.com/brilliantnz/flickernaut/issues"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Brilliant Nurzaman",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brilliantnz/flickernaut.git"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "make all",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "typecheck": "tsc --strict --noEmit"
+  },
+  "dependencies": {
+    "@girs/gjs": "4.1.0",
+    "@girs/gnome-shell": "50.0.3"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
+    "oxlint-tsgolint": "^0.24.0",
+    "typescript": "^6.0.3"
+  }
 }

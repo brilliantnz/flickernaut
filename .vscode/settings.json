@@ -1,62 +1,71 @@
 {
-    "search.exclude": {
-        "**/node_modules": true,
-        "**/.vscode": true
-    },
-    "search.useGlobalIgnoreFiles": true,
-    "search.useParentIgnoreFiles": true,
-    "editor.trimAutoWhitespace": true,
-    "files.trimTrailingWhitespace": true,
-    "editor.tabSize": 4,
+  "files.readonlyInclude": {
+    "pnpm-lock.yaml": true,
+    "bun.lock": true
+  },
+  "files.watcherExclude": {
+    "pnpm-lock.yaml": true,
+    "bun.lock": true
+  },
+  "search.exclude": {
+    "pnpm-lock.yaml": true,
+    "bun.lock": true
+  },
 
-    "prettier.enable": false,
-    "editor.formatOnSave": false,
+  // use LF line endings
+  "files.eol": "\n",
 
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit",
-        "source.organizeImports": "never"
-    },
+  // disable prettier, eslint, biome
+  "prettier.enable": false,
+  "eslint.enable": false,
+  "biome.enabled": false,
+  // enable oxlint + oxfmt
+  "oxc.enable": true,
 
-    "eslint.rules.customizations": [
-        { "rule": "style/*", "severity": "off", "fixable": true },
-        { "rule": "format/*", "severity": "off", "fixable": true },
-        { "rule": "*-indent", "severity": "off", "fixable": true },
-        { "rule": "*-spacing", "severity": "off", "fixable": true },
-        { "rule": "*-spaces", "severity": "off", "fixable": true },
-        { "rule": "*-order", "severity": "off", "fixable": true },
-        { "rule": "*-dangle", "severity": "off", "fixable": true },
-        { "rule": "*-newline", "severity": "off", "fixable": true },
-        { "rule": "*quotes", "severity": "off", "fixable": true },
-        { "rule": "*semi", "severity": "off", "fixable": true }
-    ],
+  // oxfmt via vite+
+  // "oxc.fmt.configPath": "./vite.config.ts",
 
-    "eslint.validate": [
-        "javascript",
-        "typescript",
-        "markdown",
-        "json",
-        "json5",
-        "jsonc",
-        "yaml",
-        "toml",
-        "xml",
-        "css"
-    ],
+  // set oxfmt as default formatter
+  "editor.defaultFormatter": "oxc.oxc-vscode",
 
-    "[typescript]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true
-    },
-    "[xml]": {
-        "editor.defaultFormatter": "redhat.vscode-xml",
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2
-    },
-    "xml.format.maxLineWidth": 0
+  // format on save and paste
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+
+  "editor.tabSize": 2,
+  "editor.formatOnSaveMode": "file",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
+  },
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
 }
