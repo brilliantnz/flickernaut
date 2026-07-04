@@ -6,7 +6,7 @@ on:
       - "v*"
 
 env:
-  EXTENSION_NAME: flickernaut@brilliantnz.github.io.shell-extension
+  EXTENSION_NAME: flickernaut@brilliantnz.github.com.shell-extension
 
 jobs:
   release:
@@ -16,29 +16,35 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Install Gettext
+      - name: Install System Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: gettext
+          packages: gettext libglib2.0-bin
           version: 1.0
           execute_install_scripts: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
         with:
-          cache: npm
-          node-version: "22"
+          version: 11
+          cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          cache: pnpm
+          node-version: "24"
 
       - name: Install Dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm run build --ci
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           path: dist
           name: ${{ env.EXTENSION_NAME }}
@@ -48,16 +54,16 @@ jobs:
         id: changelog
         uses: requarks/changelog-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
           tag: ${{ github.ref_name }}
           writeToFile: true
           useGitmojis: false
 
       - name: Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: ${{ env.EXTENSION_NAME }}.zip
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
           tag_name: ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.changes }}
