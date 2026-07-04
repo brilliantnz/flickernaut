@@ -7,7 +7,7 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/brilliantnz/flickernaut)
 ![GitHub stars](https://img.shields.io/github/stars/brilliantnz/flickernaut)
 
-A GNOME extension that adds custom entry to Nautilus context menu for your installed dev tools, IDEs, and custom apps.
+A GNOME extension that adds custom entries to the Nautilus context menu for your installed dev tools, IDEs, and custom apps.
 
 ## Screenshots
 
@@ -23,15 +23,15 @@ A GNOME extension that adds custom entry to Nautilus context menu for your insta
 
 ## Requirements
 
-To use this extension, you need to install the `nautilus-python` package. This package acts as an extension and providing Python bindings for Nautilus. Below are the installation instructions for various Linux distributions:
+To use this extension, you need the `nautilus-python` package. This provides Python bindings for Nautilus extensions.
 
 ### Fedora
 
 ```bash
-sudo dnf install nautilus-python nautilus-extensions
+sudo dnf install nautilus-python
 ```
 
-### Ubuntu and Debian-based Distributions
+### Ubuntu / Debian
 
 ```bash
 sudo apt install python3-nautilus gir1.2-nautilus-3.0
@@ -40,50 +40,118 @@ sudo apt install python3-nautilus gir1.2-nautilus-3.0
 ### Arch Linux
 
 ```bash
-sudo pacman -Sy python-nautilus
+sudo pacman -S nautilus-python
 ```
 
 > [!NOTE]
-> After making changes in the extension preferences, you need to restart Nautilus for the changes to take effect. For more details, [see here](https://gitlab.gnome.org/GNOME/nautilus-python#issues).
+> After changing extension preferences, restart Nautilus with `nautilus -q` for changes to take effect.
 
-## Participate
+## Development
 
-### Translations
+### Prerequisites
 
-You can help to translate the extension into your language, either by directly opening a pull request with the additions you've made, or by using [Weblate](https://hosted.weblate.org/engage/flickernaut).
+Install the following system dependencies before building:
 
-[![Translation status](https://hosted.weblate.org/widget/flickernaut/multi-auto.svg)](https://hosted.weblate.org/engage/flickernaut/)
+| Tool                   | Fedora                                                              | Ubuntu / Debian      | Arch Linux           |
+| ---------------------- | ------------------------------------------------------------------- | -------------------- | -------------------- |
+| `blueprint-compiler`   | `blueprint-compiler`                                                | `blueprint-compiler` | `blueprint-compiler` |
+| `gettext`              | `gettext`                                                           | `gettext`            | `gettext`            |
+| `glib-compile-schemas` | `glib2-devel`                                                       | `libglib2.0-bin`     | `glib2-devel`        |
+| Node.js (>= 24)        | `nodejs`                                                            | `nodejs`             | `nodejs`             |
+| pnpm                   | [corepack](https://nodejs.org/api/corepack.html) or `npm i -g pnpm` |                      |                      |
 
-### Development
+#### Fedora
 
-This extension is developed using **TypeScript** and **Python** for Nautilus part. Make sure you have Node.js, npm and tsc installed to build the TypeScript sources.
+```bash
+sudo dnf install blueprint-compiler gettext glib2-devel nodejs
+```
 
-Install the extension from source:
+#### Ubuntu / Debian
+
+```bash
+sudo apt install blueprint-compiler gettext libglib2.0-bin nodejs
+```
+
+#### Arch Linux
+
+```bash
+sudo pacman -S blueprint-compiler gettext glib2-devel nodejs
+```
+
+Enable corepack to use pnpm:
+
+```bash
+corepack enable pnpm
+```
+
+### Building
 
 ```bash
 git clone https://github.com/brilliantnz/flickernaut
 cd flickernaut
-make install
+pnpm install
+pnpm build:ui       # compile .blp Blueprint files → .ui
+pnpm build          # full build → .shell-extension.zip
 ```
 
-Then reload GNOME shell, for example by login and logout again, or under Xorg, alt+f2 and type r.
+The build uses the `--ci` flag in CI environments (GitHub Actions), which skips the Blueprint compilation step since `.ui` files are pre-compiled and committed. For local development you must run `pnpm build:ui` after editing `.blp` files.
 
-If using wayland without logout and login again, use nested wayland session:
+### Available Scripts
+
+| Script                   | Description                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `pnpm build`             | Full build: clean, compile TypeScript, copy assets, create `.shell-extension.zip` |
+| `pnpm build:ui`          | Compile Blueprint (`.blp`) files to `.ui` only                                    |
+| `pnpm build:dry-run`     | Build without creating the zip (used in CI)                                       |
+| `pnpm test`              | Build and deploy the extension, then open preferences                             |
+| `pnpm test:py`           | Deploy Nautilus extension files                                                   |
+| `pnpm test:shell`        | Start a nested GNOME Shell (Wayland) session for testing                          |
+| `pnpm install:extension` | Build and install the extension via `gnome-extensions install`                    |
+| `pnpm format`            | Format source code                                                                |
+| `pnpm lint`              | Lint source code                                                                  |
+| `pnpm typecheck`         | Run TypeScript type checking                                                      |
+| `pnpm i18n:generate`     | Extract translatable strings                                                      |
+| `pnpm i18n:merge`        | Merge translations                                                                |
+| `pnpm i18n:compile`      | Compile translations to `.mo` files                                               |
+
+### UI Development
+
+UI files are written in [Blueprint](https://gitlab.gnome.org/jwestman/blueprint-compiler), a markup language for GTK user interfaces. Edit `.blp` files in `resources/ui/`, then compile them:
 
 ```bash
-make test-shell
+pnpm build:ui
 ```
 
-To see extension log:
+The compiled `.ui` files are output to `src/ui/` and committed to the repository so CI builds can skip the Blueprint step.
+
+### Testing
+
+After building, deploy and test the extension:
 
 ```bash
-# for logs in extension's preferences
+pnpm test             # build + deploy + open preferences
+pnpm test:py          # deploy nautilus extension only
+pnpm test:shell       # nested GNOME Shell (Wayland) session
+```
+
+Reload GNOME Shell after installing (Alt+F2, `r` — X11 only).
+
+### Viewing Logs
+
+```bash
+# extension preferences
 journalctl -o cat -f /usr/bin/gjs
-# or
-journalctl /usr/bin/gjs | grep flickernaut
 
-# for logs in nautilus
+# nautilus extension
 journalctl -o cat -f /usr/bin/nautilus
-# or
-journalctl /usr/bin/nautilus | grep flickernaut
 ```
+
+## Translations
+
+Help translate the extension on [Weblate](https://hosted.weblate.org/engage/flickernaut) or by opening a pull request.
+
+[![Translation status](https://hosted.weblate.org/widget/flickernaut/multi-auto.svg)](https://hosted.weblate.org/engage/flickernaut/)
+
+## License
+
+GPL-3.0-or-later
