@@ -19,7 +19,7 @@ jobs:
       - name: Install System Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: gettext blueprint-compiler
+          packages: gettext blueprint-compiler gir1.2-gtk-4.0
           version: 1.0
           execute_install_scripts: true
 
