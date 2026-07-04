@@ -19,7 +19,7 @@ jobs:
       - name: Install System Dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: gettext blueprint-compiler gir1.2-gtk-4.0
+          packages: gettext libglib2.0-bin
           version: 1.0
           execute_install_scripts: true
 
@@ -48,4 +48,4 @@ jobs:
         run: pnpm run typecheck
 
       - name: Build
-        run: pnpm run build:dry-run
+        run: pnpm run build --ci

@@ -129,10 +129,15 @@ async function clear(): Promise<void> {
 }
 
 /** Full build: clean, compile Blueprint + TypeScript, copy UI, compile MO,
- *  compile schemas, copy assets, and package into a shell-extension.zip. */
-export async function pack(): Promise<void> {
+ *  compile schemas, copy assets, and package into a shell-extension.zip.
+ *
+ *  When `ci` is true, skips `buildUi()` — the `.ui` files are pre-compiled
+ *  and committed, so blueprint-compiler is not needed in CI. */
+export async function pack(ci = false): Promise<void> {
   await clear();
-  await buildUi();
+  if (!ci) {
+    await buildUi();
+  }
   step("Compiling TypeScript (src -> dist)");
   await run("tsc", ["-p", "tsconfig.json"]);
   ok("TypeScript compiled");
@@ -147,12 +152,15 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const uiOnly = args.includes("--ui");
   const dryRun = args.includes("--dry-run");
+  const ci = args.includes("--ci");
 
   if (uiOnly) {
     await buildUi();
   } else if (dryRun) {
     await clear();
-    await buildUi();
+    if (!ci) {
+      await buildUi();
+    }
     step("Compiling TypeScript (src -> dist)");
     await run("tsc", ["-p", "tsconfig.json"]);
     ok("TypeScript compiled");
@@ -161,7 +169,7 @@ async function main(): Promise<void> {
     await compileSchemas();
     await copyAssets();
   } else {
-    await pack();
+    await pack(ci);
   }
 }
 
