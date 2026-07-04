@@ -6,7 +6,7 @@ on:
       - "v*"
 
 env:
-  EXTENSION_NAME: flickernaut@brilliantnz.github.com.shell-extension
+  EXTENSION_NAME: flickernaut@imoize.github.io.shell-extension
 
 jobs:
   release:

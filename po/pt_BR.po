@@ -1,11 +1,11 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the flickernaut@imoize.github.com package.
+# This file is distributed under the same license as the flickernaut@imoize.github.io package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flickernaut@imoize.github.com\n"
+"Project-Id-Version: flickernaut@imoize.github.io\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-04 02:49+0700\n"
 "PO-Revision-Date: 2025-05-15 10:35+0000\n"

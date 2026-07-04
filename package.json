@@ -29,7 +29,7 @@
     "install:extension": "tsx scripts/install.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "remove": "rimraf $HOME/.local/share/gnome-shell/extensions/flickernaut@brilliantnz.github.com",
+    "remove": "rimraf $HOME/.local/share/gnome-shell/extensions/flickernaut@imoize.github.io",
     "test": "tsx scripts/test.ts",
     "test:py": "tsx scripts/test.ts --py",
     "test:shell": "tsx scripts/test.ts --shell",
