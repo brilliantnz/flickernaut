@@ -5,5 +5,5 @@ export default defineConfig({
     typeAware: true,
     typeCheck: true,
   },
-  plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "jsdoc", "promise"],
+  plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "jsdoc", "promise", "node"],
 });

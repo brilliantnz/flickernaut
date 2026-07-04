@@ -16,21 +16,43 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "make all",
+    "build": "tsx scripts/build.ts",
+    "build:dry-run": "tsx scripts/build.ts --dry-run",
+    "build:ui": "tsx scripts/build.ts --ui",
+    "clean": "rimraf node_modules dist *.shell-extension.zip schemas/gschemas.compiled",
     "format": "oxfmt",
+    "format:blp": "blueprint-compiler format resources/ui/**/*.blp",
     "format:check": "oxfmt --check",
+    "i18n:compile": "tsx scripts/i18n.ts --compile",
+    "i18n:generate": "tsx scripts/i18n.ts --generate",
+    "i18n:merge": "tsx scripts/i18n.ts --generate --merge",
+    "install:extension": "tsx scripts/install.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "typecheck": "tsc --strict --noEmit"
+    "remove": "rimraf $HOME/.local/share/gnome-shell/extensions/flickernaut@brilliantnz.github.com",
+    "test": "tsx scripts/test.ts",
+    "test:py": "tsx scripts/test.ts --py",
+    "test:shell": "tsx scripts/test.ts --shell",
+    "typecheck": "tsc --strict --noEmit -p tsconfig.json && tsc --strict --noEmit -p tsconfig.scripts.json"
   },
   "dependencies": {
     "@girs/gjs": "4.1.0",
     "@girs/gnome-shell": "50.0.3"
   },
   "devDependencies": {
+    "@types/archiver": "^8.0.0",
+    "@types/node": "^26.1.0",
+    "archiver": "^8.0.0",
+    "execa": "^9.6.1",
     "oxfmt": "^0.57.0",
     "oxlint": "^1.72.0",
     "oxlint-tsgolint": "^0.24.0",
+    "rimraf": "^6.1.3",
+    "tinyglobby": "^0.2.17",
+    "tsx": "^4.22.5",
     "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

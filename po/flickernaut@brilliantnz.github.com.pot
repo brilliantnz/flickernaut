@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the flickernaut@imoize.github.io package.
+# This file is distributed under the same license as the flickernaut@brilliantnz.github.com package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: flickernaut@imoize.github.io\n"
+"Project-Id-Version: flickernaut@brilliantnz.github.com\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-26 16:17+0700\n"
+"POT-Creation-Date: 2026-07-04 02:53+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -97,15 +97,15 @@ msgstr ""
 msgid "Open With..."
 msgstr ""
 
-#: src/prefs/applicationList.ts:65
+#: src/prefs/applicationList.ts:69
 msgid "Pin in main menu when submenu is enabled."
 msgstr ""
 
-#: src/prefs/applicationList.ts:80
+#: src/prefs/applicationList.ts:84
 msgid "Name cannot be empty"
 msgstr ""
 
-#: src/prefs/applicationList.ts:82
+#: src/prefs/applicationList.ts:86
 msgid "Name already exists"
 msgstr ""
 

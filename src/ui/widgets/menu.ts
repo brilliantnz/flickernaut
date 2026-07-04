@@ -1,5 +1,4 @@
 import type Adw from "gi://Adw";
-import Gdk from "gi://Gdk";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
@@ -15,7 +14,7 @@ export class Menu {
    *
    * @param window - The Adw.PreferencesWindow to which the menu will be added.
    *
-   * @remarks
+   *
    * - The method expects a `menu.ui` file to be present and accessible relative to the module URL.
    * - If the menu UI or header bar cannot be found, the method will return early.
    * - The actions added will open external URLs in the user's default browser.
@@ -29,7 +28,7 @@ export class Menu {
         )[0],
       );
     } catch (e) {
-      console.log(`Failed to load menu.ui: ${e}`);
+      console.log(`Failed to load menu.ui: ${String(e)}`);
       return;
     }
 
@@ -62,7 +61,8 @@ export class Menu {
     actions.forEach((action) => {
       const act = new Gio.SimpleAction({ name: action.name });
       act.connect("activate", () => {
-        Gtk.show_uri(window, action.link, Gdk.CURRENT_TIME);
+        const launcher = new Gtk.UriLauncher({ uri: action.link });
+        launcher.launch(window, null, null);
       });
       actionGroup.add_action(act);
     });

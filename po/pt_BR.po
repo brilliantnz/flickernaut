@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the flickernaut@imoize.github.io package.
+# This file is distributed under the same license as the flickernaut@imoize.github.com package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: flickernaut@imoize.github.io\n"
+"Project-Id-Version: flickernaut@imoize.github.com\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-15 06:53+0700\n"
+"POT-Creation-Date: 2026-07-04 02:49+0700\n"
 "PO-Revision-Date: 2025-05-15 10:35+0000\n"
 "Last-Translator: Matheus <cybercountry@proton.me>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -19,64 +19,135 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.12-dev\n"
 
-#: src/ui/pages/general.ui:11
+#: src/ui/pages/application.ui:12 src/ui/pages/application.ui:18
+msgid "Apps"
+msgstr ""
+
+#: src/ui/pages/application.ui:19
+msgid ""
+"Applications listed here will appear in the Nautilus context menu.\n"
+"You can Enable/Disable using the toggle switch."
+msgstr ""
+
+#: src/ui/pages/application.ui:28
+msgid "Add"
+msgstr ""
+
+#: src/ui/pages/general.ui:12
 msgid "General"
 msgstr "Geral"
 
-#: src/ui/pages/general.ui:14
-msgid "Needs to Restart Nautilus"
-msgstr "É preciso reiniciar o Nautilus"
+#: src/ui/pages/general.ui:18
+msgid "Behavior"
+msgstr ""
 
-#: src/ui/pages/general.ui:19
-msgid "Editor"
-msgstr "Editor"
+#: src/ui/pages/general.ui:21
+msgid "Group In Submenu"
+msgstr ""
 
-#: nautilus-extension/Flickernaut/models.py:31
-msgid "Unknown"
-msgstr "Desconhecido"
+#: src/ui/pages/general.ui:22
+msgid "Whether to group entries in a submenu."
+msgstr ""
 
-#: nautilus-extension/Flickernaut/models.py:175
+#: src/ui/widgets/application-list.ui:12
+msgid "Name"
+msgstr "Nome"
+
+#: src/ui/widgets/application-list.ui:17
+msgid "Multiple Files"
+msgstr ""
+
+#: src/ui/widgets/application-list.ui:18
+msgid "Enable if the app supports opening several files."
+msgstr ""
+
+#: src/ui/widgets/application-list.ui:23
+msgid "Multiple Folders"
+msgstr ""
+
+#: src/ui/widgets/application-list.ui:24
+msgid "Enable if the app supports opening several folders."
+msgstr ""
+
+#: src/ui/widgets/application-list.ui:29
+msgid "Mime Types"
+msgstr ""
+
+#: src/ui/widgets/application-list.ui:42
+msgid "Remove"
+msgstr ""
+
+#: src/ui/widgets/menu.ui:12
+msgid "Project Page"
+msgstr ""
+
+#: nautilus-extension/Flickernaut/registry.py:61
 #, python-format
 msgid "Open with %s"
 msgstr "Abrir com %s"
 
-#: nautilus-extension/Flickernaut/models.py:177
+#: nautilus-extension/Flickernaut/registry.py:63
 #, python-format
 msgid "Open in %s"
 msgstr "Abrir em %s"
 
-#: src/prefs/editors.ts:27
-msgid "Name"
-msgstr "Nome"
+#: nautilus-extension/Flickernaut/registry.py:160
+#, fuzzy
+msgid "Open In..."
+msgstr "Abrir em %s"
 
-#: src/prefs/editors.ts:41
+#: nautilus-extension/Flickernaut/registry.py:160
+#, fuzzy
+msgid "Open With..."
+msgstr "Abrir com %s"
+
+#: src/prefs/applicationList.ts:69
+msgid "Pin in main menu when submenu is enabled."
+msgstr ""
+
+#: src/prefs/applicationList.ts:84
 msgid "Name cannot be empty"
 msgstr "Nome não pode estar em branco"
 
-#: src/prefs/editors.ts:43
+#: src/prefs/applicationList.ts:86
 msgid "Name already exists"
 msgstr "Esse nome já existe"
 
-#: src/prefs/editors.ts:57
-msgid "Native Cmd"
-msgstr "Comando nativo"
+#: src/ui/widgets/banner.ts:26
+msgid "Restart Nautilus to apply changes."
+msgstr ""
 
-#: src/prefs/editors.ts:70
-msgid "Native command already exists"
-msgstr "Esse comando nativo já está em uso"
+#: src/ui/widgets/banner.ts:27
+msgid "Restart"
+msgstr ""
 
-#: src/prefs/editors.ts:82
-msgid "Flatpak ID"
-msgstr "Flatpak ID"
+#: src/ui/widgets/banner.ts:28
+msgid "Nautilus will be closed and restarted after clicking this button."
+msgstr ""
 
-#: src/prefs/editors.ts:95
-msgid "Flatpak ID already exists"
-msgstr "Esse Flatpak ID já está em uso"
+#~ msgid "Needs to Restart Nautilus"
+#~ msgstr "É preciso reiniciar o Nautilus"
 
-#: src/prefs/editors.ts:107
-msgid "Arguments"
-msgstr "Argumentos"
+#~ msgid "Editor"
+#~ msgstr "Editor"
 
-#: src/prefs/editors.ts:116
-msgid "Support File"
-msgstr "Suporte a arquivos"
+#~ msgid "Unknown"
+#~ msgstr "Desconhecido"
+
+#~ msgid "Native Cmd"
+#~ msgstr "Comando nativo"
+
+#~ msgid "Native command already exists"
+#~ msgstr "Esse comando nativo já está em uso"
+
+#~ msgid "Flatpak ID"
+#~ msgstr "Flatpak ID"
+
+#~ msgid "Flatpak ID already exists"
+#~ msgstr "Esse Flatpak ID já está em uso"
+
+#~ msgid "Arguments"
+#~ msgstr "Argumentos"
+
+#~ msgid "Support File"
+#~ msgstr "Suporte a arquivos"

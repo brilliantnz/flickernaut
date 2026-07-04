@@ -40,7 +40,7 @@ export default class Flickernaut extends Extension {
           }
         }
       } catch (e) {
-        console.error(`Error creating symlink for ${name}: ${e}`);
+        console.error(`Error creating symlink for ${name}: ${String(e)}`);
       }
     }
   }
@@ -63,7 +63,7 @@ export default class Flickernaut extends Extension {
           console.warn(`Symlink not found: ${destDir}`);
         }
       } catch (e) {
-        console.error(`Error removing symlink for ${name}: ${e}`);
+        console.error(`Error removing symlink for ${name}: ${String(e)}`);
       }
     }
   }

@@ -39,7 +39,7 @@ class ApplicationConfigLoader:
             GLib.get_user_data_dir(),
             "gnome-shell",
             "extensions",
-            "flickernaut@brilliantnz.github.io",
+            "flickernaut@brilliantnz.github.com",
             "schemas",
         )
 

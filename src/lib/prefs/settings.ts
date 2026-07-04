@@ -21,7 +21,7 @@ export const SchemaKey = {
  * - `'u'`: Unsigned integer schema (e.g., version)
  * - `'b'`: Boolean schema (e.g., submenu)
  *
- * @remarks
+ *
  * This record ensures type safety by restricting keys to those defined in `SchemaKey`.
  */
 const SchemaVariant: Record<(typeof SchemaKey)[keyof typeof SchemaKey], string> = {
@@ -95,7 +95,7 @@ export function getSettings<K extends keyof typeof SchemaKey>(key: K): SchemaTyp
 /**
  * Sets a setting value in the application's settings schema.
  *
- * @typeParam K - The key of the setting, constrained to the keys of `SchemaKey`.
+ * @template K - The key of the setting, constrained to the keys of `SchemaKey`.
  * @param key - The key of the setting to update.
  * @param value - The value to set for the specified key, matching the type defined in `SchemaType[K]`.
  * @param bannerHandler - Optional handler to display a banner after the setting is updated.
@@ -170,7 +170,6 @@ export function setAppSettings(newAppSettings: Application, bannerHandler?: Bann
  * @param app - The application to add (as an `Application` object) or the application ID to remove (as a `string`).
  * @param bannerHandler - Optional handler for displaying banners or notifications after the operation.
  *
- * @remarks
  * - When adding, the function checks for duplicates based on `id` or `appId` before adding.
  * - When removing, the function filters out the application with the matching `id`.
  * - Updates the settings by serializing the application list and invoking `setSettings`.
