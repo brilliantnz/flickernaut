@@ -1,5 +1,4 @@
 import type Adw from "gi://Adw";
-import Gdk from "gi://Gdk";
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import Gtk from "gi://Gtk";
@@ -62,7 +61,8 @@ export class Menu {
     actions.forEach((action) => {
       const act = new Gio.SimpleAction({ name: action.name });
       act.connect("activate", () => {
-        Gtk.show_uri(window, action.link, Gdk.CURRENT_TIME);
+        const launcher = new Gtk.UriLauncher({ uri: action.link });
+        launcher.launch(window, null, null);
       });
       actionGroup.add_action(act);
     });
